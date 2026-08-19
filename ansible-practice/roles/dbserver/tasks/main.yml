@@ -1,0 +1,5 @@
+---
+# TODO: Write a debug task here for the database server
+- name: Print dbserver variables
+  ansible.builtin.debug:
+    msg: "MySQL Port is: {{ mysql_port | default('3306') }}"

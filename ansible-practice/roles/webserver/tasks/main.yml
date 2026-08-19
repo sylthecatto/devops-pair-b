@@ -1,0 +1,5 @@
+---
+# TODO: Write a debug task here to print your resolved variables!
+- name: Print webserver variables
+  ansible.builtin.debug:
+    msg: "APP Port is: {{ app_port }}"

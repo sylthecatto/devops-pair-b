@@ -1,0 +1,3 @@
+---
+# TODO: Define variables that ONLY apply to the [dbservers] group here
+# Example: mysql_port: 3306
