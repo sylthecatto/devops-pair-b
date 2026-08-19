@@ -1,0 +1,24 @@
+#cloud-config
+
+# the golden image is identical on every clone, cloud-init runs on first
+# boot to give each one its own hostname and authorized key
+hostname: ${hostname}
+fqdn: ${hostname}.pair-b.lab
+preserve_hostname: false
+
+users:
+  - name: ${ssh_user}
+    groups: [wheel]
+    shell: /bin/bash
+    lock_passwd: true
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    ssh_authorized_keys:
+      - ${ssh_pubkey}
+
+# key auth only, no passwords, no root login
+ssh_pwauth: false
+disable_root: true
+
+# regenerate host keys, kickstart wiped them so clones do not share identity
+ssh_deletekeys: true
+ssh_genkeytypes: [ed25519, rsa]
