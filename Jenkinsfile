@@ -16,8 +16,10 @@ pipeline {
             steps {
                 // 1. Checkout latest source code from Git
                 checkout scm
-                
-                // 2. Clean temporary build artifacts, preserving Packer image and Terraform state memory
+
+                // 2. Ensure static Packer build keys exist on the Jenkins agent
+                sh './bootstrap.sh'
+                // 3. Clean temporary build artifacts, preserving Packer image and Terraform state memory
                 sh 'git clean -ffdx -e packer/output -e terraform/.terraform -e terraform/*.tfstate*'
             }
         }
