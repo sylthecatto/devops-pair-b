@@ -190,7 +190,7 @@ locals {
 
 # tracked, so destroy removes it instead of leaving a stale file
 resource "local_file" "ansible_inventory" {
-  filename        = "${path.module}/../ansible/inventory/hosts.yml"
+  filename        = "${path.module}/../ansible/inventory/hosts"
   file_permission = "0644"
 
   content = templatefile("${path.module}/templates/inventory.yml.tftpl", {
