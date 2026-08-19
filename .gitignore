@@ -12,7 +12,7 @@ terraform/crash.log
 # ansible - these are never committed and must be reinstalled fresh via the requirements.yaml file
 ansible/roles/
 ansible/collections/
-ansible/inventory/hosts.yaml
+ansible/inventory/hosts.yml
 *.retry
 
 # secrets - never committed
@@ -23,4 +23,4 @@ vault_pass
 *.pass
 
 # per-run artifacts
-goss-repots/*.json
+goss-reports/*.json
