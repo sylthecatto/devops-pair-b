@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         // Securely pull the vault password from Jenkins Credentials store
-        ANSIBLE_VAULT_PASS = credentials('ANSIBLE_VAULT_PASS')
+        ANSIBLE_VAULT_PASS = credentials('ANSIBLE_VAULT_PASS_REAL')
     }
 
     stages {
