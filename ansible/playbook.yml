@@ -1,0 +1,32 @@
+---
+- name: Pair B - CIS Baseline Secrity Hardening & Disk Setup
+  hosts: pb_nodes
+  become: true
+
+  vars_files:
+    - group_vars/vault.yml
+
+  # PRECEDENCE LEVEL 2: Playbook Variables (Overrides group_vars)
+
+  vars:
+    # 1. Custom Warning Banner (Pair B Tailoring Requirement)
+    rhel10cis_warning_banner: "WARNING: Authorized Access Only - Pair B System"
+
+    # 2. Safety Rule: Disable Account Lockouts (Pair B Safety Constraint)
+    rhel10cis_rule_5_3_2_1_1: false # Disable 'deny' lockout count
+    rhel10cis_rule_5_3_2_1_2: false # Disable 'unlock_time'
+    rhel10cis_rule_5_3_2_1_3: false # Disable 'fail_interval'
+
+  # PRE-TASKS: Format SCSI Data Disks to ext4 (Pair B Task Requirement)
+  pre_tasks:
+    - name: Format SCSI Data Disk 1 as ext4
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/sda
+    - name: Format SCSI Data Disk 2 as ext4
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/sdb
+
+  roles:
+    - RHEL10-CIS

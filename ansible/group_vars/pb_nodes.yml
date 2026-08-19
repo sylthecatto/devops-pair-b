@@ -1,0 +1,32 @@
+---
+# PRECEDENCE LEVEL 1: Group Variables for Pair B Nodes
+
+# 1. Goss Audit Execution Flags
+setup_audit: true
+run_audit: true
+
+# 2. Fetch Goss Audit JSON report back to controller for Jenkins archiving
+fetch_audit_output: true
+audit_output_destination: "./"
+
+# 3. Logging Strategy: Use journald for logging (Pair B Task Requirement)
+rhel10cis_syslog: journald
+
+# 4. Level 1 Server Only Baseline
+rhel10cis_level_2: false
+
+# 5. Pipeline Safety & NoneType Fixes
+rhel10cis_sshd_allowusers: ""
+rhel10cis_rule_1_2_1_1: false # Bypass GPG key check for minimal ISO repo
+
+#trying to override this level 1
+rhel10cis_warning_banner: "WARNING: Testing lang kung tatagos"
+
+# overring this by level 3 (extravars in the cmd l)
+rhel10cis_pass_max_days: 180
+
+# Disable rule 5.2.4 check because user 'syl' is SSH-key authenticated without a password
+rhel10cis_rule_5_2_4: false
+
+# Set custom authselect profile name
+rhel10cis_authselect_custom_profile_name: custom_pair_b_profile

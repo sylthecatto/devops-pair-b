@@ -19,7 +19,7 @@ variable "vcpu" {
 
 variable "memory_mb" {
   type    = number
-  default = 2048
+  default = 4096
 }
 
 
