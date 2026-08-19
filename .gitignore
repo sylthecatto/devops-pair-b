@@ -14,7 +14,7 @@ terraform/.ssh/
 # ansible - these are never committed and must be reinstalled fresh via the requirements.yaml file
 ansible/roles/
 ansible/collections/
-ansible/inventory/hosts.yml
+ansible/inventory/hosts
 *.retry
 
 # secrets - never committed
