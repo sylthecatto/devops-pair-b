@@ -1,0 +1,77 @@
+bunny@aeron:~$ cd /
+bunny@aeron:/$ ls
+afs  boot  etc   lib    media  opt   root  sbin  sys  usr
+bin  dev   home  lib64  mnt    proc  run   srv   tmp  var
+bunny@aeron:/$ cd var/lib
+bunny@aeron:/var/lib$ ls
+abrt             containerd          geoclue               livesys            PackageKit  smartmontools
+AccountsService  containers          gnome-initial-setup   lockdown           passim      sss
+alsa             dbus                gnome-remote-desktop  logrotate          plocate     swtpm-localca
+alternatives     dnf                 gssproxy              lvm                plymouth    systemd
+authselect       dnsmasq             hp                    machines           polkit-1    tpm2-tss
+bluetooth        docker              httpd                 malcontent-timerd  portables   tuned
+boltd            fedora-third-party  hyperv                misc               private     udisks2
+brltty           flatpak             initramfs             net-snmp           rpm         ufw
+chrony           fprint              iscsi                 NetworkManager     rpm-state   unbound
+cni              fwupd               jenkins               nfs                rsyslog     upower
+color            games               lastlog               openvpn            samba
+colord           gdm                 libvirt               os-prober          selinux
+bunny@aeron:/var/lib$ cd jenkins
+bunny@aeron:/var/lib/jenkins$ ls
+caches
+config.xml
+credentials.xml
+fingerprints
+hudson.model.UpdateCenter.xml
+hudson.plugins.git.GitTool.xml
+identity.key.enc
+io.jenkins.plugins.pipelinegraphview.PipelineGraphViewConfiguration.xml
+io.jenkins.plugins.prism.PrismAppearanceConfiguration.xml
+io.jenkins.plugins.thememanager.ThemeManagerPageDecorator.xml
+jenkins.console.ConsoleUrlProviderGlobalConfiguration.xml
+jenkins.install.InstallUtil.lastExecVersion
+jenkins.install.UpgradeWizard.state
+jenkins.model.JenkinsLocationConfiguration.xml
+jenkins.security.apitoken.ApiTokenPropertyConfiguration.xml
+jenkins.telemetry.Correlator.xml
+jobs
+logs
+nodeMonitors.xml
+org.jenkinsci.plugins.github_branch_source.GitHubSCMProbe.cache
+org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer.xml
+org.jenkinsci.plugins.workflow.flow.FlowExecutionList.xml
+plugins
+queue.xml.bak
+secret.key
+secret.key.not-so-secret
+secrets
+updates
+userContent
+users
+workspace
+bunny@aeron:/var/lib/jenkins$ cd workspace
+bunny@aeron:/var/lib/jenkins/workspace$ ls
+argo-deepdive-app_main            bunny-app-pipeline_main@tmp        my-app-pipeline_PR-1
+argo-deepdive-app_main@tmp        bunny-app-pipeline_new-branch      my-app-pipeline_PR-1@tmp
+argo-deepdive-app_new-branch      bunny-app-pipeline_new-branch@tmp  my-app-pipeline_staging
+argo-deepdive-app_new-branch@tmp  bunny-app-pipeline_PR-2            my-app-pipeline_staging@tmp
+argo-deepdive-app_PR-4            bunny-app-pipeline_PR-2@script     my-app-pipeline_v1.0.0
+argo-deepdive-app_PR-4@script     bunny-app-pipeline_PR-2@tmp        my-app-pipeline_v1.0.0@tmp
+argo-deepdive-app_PR-4@tmp        bunny-app-pipeline_staging         my-app-pipeline_v2.0.0
+argo-deepdive-app_staging         bunny-app-pipeline_staging@tmp     my-app-pipeline_v2.0.0@tmp
+argo-deepdive-app_staging@tmp     my-app-pipeline_main               Pair-B-Pipeline
+argo-deepdive-app_v1.0.0          my-app-pipeline_main@tmp           Pair-B-Pipeline@tmp
+argo-deepdive-app_v1.0.0@tmp      my-app-pipeline_new-branch         workspaces.txt
+bunny-app-pipeline_main           my-app-pipeline_new-branch@tmp
+bunny@aeron:/var/lib/jenkins/workspace$ cd Pair-B-Pipeline
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline$ ls
+ansible  ansible@tmp  docs  Jenkinsfile  packer  packer-info.md  README.md  terraform  terraform@tmp
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline$ cd terraform
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline/terraform$ ls
+id_ed25519  main.tf  terraform.tfstate  terraform.tfstate.backup
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline/terraform$ cd ..
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline$ cd packer/
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline/packer$ ls
+almalinux.pkr.hcl  kickstart.cfg  output
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline/packer$ ^C
+bunny@aeron:/var/lib/jenkins/workspace/Pair-B-Pipeline/packer$ 
