@@ -59,7 +59,7 @@ variable "data_disk_size_gb" {
 # uefi
 # ────────
 
-# confirmed via: rpm -ql edk2-ovmf
+# confirmed with: rpm -ql edk2-ovmf
 variable "ovmf_code" {
   type    = string
   default = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
@@ -70,6 +70,7 @@ variable "ovmf_vars" {
   default = "/usr/share/edk2/ovmf/OVMF_VARS.fd"
 }
 
+# outside the pool dir, otherwise destroy fails on a non-empty pool
 variable "nvram_dir" {
   type    = string
   default = "/var/lib/libvirt/qemu/nvram"
@@ -86,8 +87,7 @@ variable "ssh_user" {
   default = "syl"
 }
 
-# where terraform writes the deploy key it generates. inside the repo
-# dir and gitignored, so no ~/.ssh setup is needed on a fresh machine
+# gitignored, terraform writes the generated keypair here
 variable "ssh_key_dir" {
   type    = string
   default = ".ssh"
