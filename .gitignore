@@ -1,0 +1,26 @@
+# packer outputs
+packer/output/
+packer/*.iso
+*-manifest.json
+
+# terraform (note: the statefile is located outside of the repo /var/lib/devops-pair-b/tfstate)
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/crash.log
+
+# ansible - these are never committed and must be reinstalled fresh via the requirements.yaml file
+ansible/roles/
+ansible/collections/
+ansible/inventory/hosts.yaml
+*.retry
+
+# secrets - never committed
+*.pem
+*.key
+vault_pass
+.vault_pass
+*.pass
+
+# per-run artifacts
+goss-repots/*.json
