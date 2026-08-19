@@ -206,9 +206,13 @@ resource "local_file" "ansible_inventory" {
   file_permission = "0644"
 
   content = templatefile("${path.module}/templates/inventory.yml.tftpl", {
-    nodes           = local.nodes
-    ssh_user        = var.ssh_user
-    ssh_private_key = pathexpand(var.ssh_private_key_path)
+    nodes    = local.nodes
+    ssh_user = var.ssh_user
+    # deliberately NOT pathexpand()'d. pathexpand would resolve to the
+    # home dir of whoever runs terraform, which is correct on that
+    # machine but wrong the moment the file is read anywhere else.
+    # ansible expands ~ itself, per-user, so the raw path always works
+    ssh_private_key = var.ssh_private_key_path
   })
 }
 
@@ -224,6 +228,6 @@ output "node_ips" {
 output "ssh_commands" {
   value = [
     for n in local.nodes :
-    "ssh -i ${pathexpand(var.ssh_private_key_path)} ${var.ssh_user}@${n.ip}"
+    "ssh -i ${var.ssh_private_key_path} ${var.ssh_user}@${n.ip}"
   ]
 }
