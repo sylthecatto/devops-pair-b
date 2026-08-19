@@ -206,9 +206,13 @@ resource "local_file" "ansible_inventory" {
   file_permission = "0644"
 
   content = templatefile("${path.module}/templates/inventory.yml.tftpl", {
-    nodes           = local.nodes
-    ssh_user        = var.ssh_user
-    ssh_private_key = pathexpand(var.ssh_private_key_path)
+    nodes    = local.nodes
+    ssh_user = var.ssh_user
+    # NOT pathexpand()'d on purpose. expanding here would bake THIS
+    # machine's home dir into the file (/home/<builder>/.ssh/...), which
+    # breaks for anyone else running the playbook. ansible expands ~
+    # itself, per-user, so the raw path stays portable
+    ssh_private_key = var.ssh_private_key_path
   })
 }
 
@@ -224,6 +228,6 @@ output "node_ips" {
 output "ssh_commands" {
   value = [
     for n in local.nodes :
-    "ssh -i ${pathexpand(var.ssh_private_key_path)} ${var.ssh_user}@${n.ip}"
+    "ssh -i ${var.ssh_private_key_path} ${var.ssh_user}@${n.ip}"
   ]
 }
