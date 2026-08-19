@@ -99,3 +99,7 @@ This document contains all mentor Q&A questions, architectural defenses, and pre
   1. `fetch_audit_output: true`: Instructs Ansible to retrieve pre-scan and post-scan Goss audit JSON files from `/opt` on the remote VM back to the control machine.
   2. `audit_output_destination: "./"`: Tells Ansible to save the fetched `*.json` files directly into the active `ansible/` directory.
   In Jenkins, `archiveArtifacts artifacts: '*.json'` captures these files so they can be viewed and downloaded directly from the Jenkins build dashboard.
+
+### Q18: Why did Packer fail with "Duplicate variable definition found" in Jenkins?
+- **Answer & Justification:**
+  Packer parses all `.pkr.hcl` files present in the build directory. The GitHub remote repository contained two duplicate Packer configuration files (`almalinux.pkr.hcl` and `almalinux10.pkr.hcl`), both defining the same input variables. Deleting the redundant `almalinux.pkr.hcl` file from Git ensures Packer parses a single unified configuration file without variable name collisions.
