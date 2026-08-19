@@ -8,7 +8,7 @@ terraform {
   required_providers {
     libvirt = {
       source = "dmacvicar/libvirt"
-      # pinned, 0.9.x is a breaking schema rewrite
+      # 0.9.x is a breaking schema rewrite
       version = "0.8.3"
     }
     local = {
@@ -21,14 +21,12 @@ terraform {
     }
   }
 
-  # state lives outside the repo so a wiped workspace still has
-  # something to destroy
+  # outside the repo, so a wiped workspace still has state to destroy
   backend "local" {
     path = "/var/lib/devops-pair-b/tfstate/pair-b/terraform.tfstate"
   }
 }
 
-# system-wide libvirtd so jenkins and your shell see the same domains
 provider "libvirt" {
   uri = "qemu:///system"
 }
@@ -38,8 +36,7 @@ provider "libvirt" {
 # deploy key
 # ────────────
 
-# generated here rather than by hand, so a fresh clone needs no
-# ssh-keygen step. gitignored, and destroyed with everything else
+# generated here so a fresh clone needs no ssh-keygen step
 resource "tls_private_key" "deploy" {
   algorithm = "ED25519"
 }
@@ -73,7 +70,7 @@ resource "libvirt_volume" "golden" {
   source = var.golden_image_path
 }
 
-# base_volume_id is the copy-on-write clone
+# base_volume_id gives a copy-on-write clone instead of a full copy
 resource "libvirt_volume" "os_disk" {
   count          = var.node_count
   name           = "${local.node_names[count.index]}-os.qcow2"
@@ -81,8 +78,7 @@ resource "libvirt_volume" "os_disk" {
   base_volume_id = libvirt_volume.golden.id
 }
 
-# blank disks, ansible formats them ext4. flat list, index math maps
-# each back to its owning node
+# blank disks, ansible formats them ext4
 resource "libvirt_volume" "data_disk" {
   count = var.node_count * var.data_disk_count
   name = format("%s-data%d.qcow2",
@@ -121,17 +117,12 @@ resource "libvirt_domain" "node" {
   memory  = var.memory_mb
   vcpu    = var.vcpu
   running = true
+  machine = "q35"
 
-  # required: almalinux 10 needs x86-64-v2, qemu's generic cpu does not
-  # provide it and glibc dies at boot without this
+  # almalinux 10 needs x86-64-v2, qemu's generic cpu does not provide it
   cpu {
     mode = "host-passthrough"
   }
-
-  # q35 matches what packer built on. only possible because the seed is
-  # attached as a virtio disk below, not via `cloudinit =` (that forces
-  # an IDE cdrom, and q35 has no IDE controller)
-  machine = "q35"
 
   firmware = var.ovmf_code
   nvram {
@@ -144,10 +135,9 @@ resource "libvirt_domain" "node" {
     volume_id = libvirt_volume.os_disk[count.index].id
   }
 
-  # seed as a virtio disk, NOT via `cloudinit =`. that attaches it as an
-  # IDE cdrom which is not probed yet when cloud-init runs init-local,
-  # so blkid finds no cidata label and it falls back to no datasource.
-  # split() strips the ";uuid" suffix off the terraform id
+  # seed as a virtio disk, not via `cloudinit =`. that attaches an IDE
+  # cdrom, which q35 has no controller for and cloud-init cannot see
+  # during init-local anyway. split() drops the ";uuid" id suffix
   disk {
     volume_id = split(";", libvirt_cloudinit_disk.seed[count.index].id)[0]
   }
@@ -161,13 +151,11 @@ resource "libvirt_domain" "node" {
     }
   }
 
-  # block until dhcp lands so the inventory gets real IPs
   network_interface {
     network_name   = var.network_name
     wait_for_lease = true
   }
 
-  # makes `virsh console pb-node-1` work for the live demo
   console {
     type        = "pty"
     target_type = "serial"
@@ -181,7 +169,7 @@ resource "libvirt_domain" "node" {
 # ────────────────────
 
 locals {
-  # interface also reports ipv6 link-local, keep only ipv4
+  # the interface also reports ipv6 link-local, keep only ipv4
   node_ips = [
     for d in libvirt_domain.node :
     try([
@@ -198,8 +186,7 @@ locals {
   ]
 }
 
-# tracked, so destroy removes it instead of leaving a stale file.
-# gitignored: it is generated per machine, never shared
+# tracked, so destroy removes it instead of leaving a stale file
 resource "local_file" "ansible_inventory" {
   filename        = "${path.module}/../ansible/inventory/hosts.yml"
   file_permission = "0644"
