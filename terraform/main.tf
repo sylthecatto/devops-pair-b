@@ -21,9 +21,11 @@ terraform {
     }
   }
 
-  # outside the repo, so a wiped workspace still has state to destroy
+  # workspace-relative, so the same config works from a local clone and
+  # from the jenkins workspace with no per-machine setup. the jenkinsfile
+  # excludes *.tfstate* from git clean so builds do not wipe it
   backend "local" {
-    path = "/var/lib/devops-pair-b/tfstate/pair-b/terraform.tfstate"
+    path = "terraform.tfstate"
   }
 }
 

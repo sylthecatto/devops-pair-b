@@ -38,10 +38,10 @@ variable "pool_path" {
   default = "/var/lib/libvirt/pools/pool_b"
 }
 
-# must match packer's output_directory + vm_name
+# relative to terraform/, must match packer's output_directory + vm_name
 variable "golden_image_path" {
   type    = string
-  default = "/var/lib/devops-pair-b/images/alma10-golden/alma10-golden.qcow2"
+  default = "../packer/output/alma10-golden.qcow2"
 }
 
 variable "data_disk_count" {

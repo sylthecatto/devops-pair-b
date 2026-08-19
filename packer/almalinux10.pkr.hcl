@@ -20,9 +20,10 @@ variable "alma_version" {
   default = "10.2"
 }
 
+# relative to packer/, gitignored. terraform reads it from ../packer/output
 variable "output_directory" {
   type    = string
-  default = "/var/lib/devops-pair-b/images/alma10-golden"
+  default = "output"
 }
 
 variable "efi_firmware_code" {
