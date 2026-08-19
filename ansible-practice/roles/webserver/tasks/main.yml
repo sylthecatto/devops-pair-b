@@ -1,5 +1,76 @@
 ---
-# TODO: Write a debug task here to print your resolved variables!
-- name: Print webserver variables
+- name: Display resolved webserver variables
   ansible.builtin.debug:
-    msg: "APP Port is: {{ app_port }}"
+    msg:
+      - "Target Hostname: {{ inventory_hostname }}"
+      - "Company Name: {{ company_name }}"
+      - "Web Package: {{web_package | default('none') }}"
+      - "Resolved APP Port: {{ app_port}}"
+
+  # Task 1 for handlers
+- name: Update webserver configuration file
+  ansible.builtin.debug:
+    msg: "Writing updated config file to /etc/nginx/nginx.conf..."
+  changed_when: false
+  notify: Restart WebServer Service
+
+  # task 2 for handlers
+- name: Update the SSL certificate file
+  ansible.builtin.debug:
+    msg: "Writing the updated SSL certificate"
+  changed_when: false
+  notify: Restart WebServer Service
+
+  # task 3 generates ndex.html from the jinja2 template and notifies handlers
+- name: Deploy index.html template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /tmp/index_{{inventory_hostname}}.html
+  notify: Restart WebServer Service
+
+  # task 4 Generates nginx.conf from jinja template and notifies handler
+
+- name: Deploy nginx.conf template
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "/tmp/nginx.conf_{{inventory_hostname}}.conf"
+  notify: Restart WebServer Service
+
+  # task 5 Iterating over a list of packages using loop!
+
+- name: Simulate installing required web utilities
+  ansible.builtin.debug:
+    msg: "Installing package: {{ item }}"
+  loop:
+    - "curl"
+    - "wget"
+    - "nginx"
+    - "certbot"
+
+  #task 6 Conditional wherein it will only run if the environment is production
+- name: Enable Production Security Monitoring
+  ansible.builtin.debug:
+    msg: "Production ALert: Security monitoring enabled for {{inventory_hostname}}"
+
+  when: environment_type == "production"
+
+  # task 7: practice trigger the ignored in play recap
+- name: Intentionally fail a command but ignore the error
+  ansible.builtin.command: "cat /file/that/does/not/exist"
+  ignore_errors: true
+
+  # task 8: Error handling block (trigger the rescued play in recap)
+- name: Demonstrate Block, Rescue, and Always
+  block:
+    - name: Attempt a risky command that fails
+      ansible.builtin.command: "ls/folder/that/does/not/exist"
+  rescue:
+    - name: Emergency Rescue Action
+      ansible.builtin.debug:
+        msg: "rescue triggered: Error caught and recovered safely"
+  always:
+    - name: Cleanup Action
+      ansible.builtin.debug:
+        msg: "Always triggered: Running cleanup task"
+
+        

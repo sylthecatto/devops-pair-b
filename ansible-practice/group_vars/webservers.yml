@@ -1,3 +1,3 @@
----
-# TODO: Define variables that ONLY apply to the [webservers] group here
-# Example: app_port: 8080 (This will override all.yml for webservers!)
+web_package: "nginx"
+
+app_port: 8080

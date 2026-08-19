@@ -1,4 +1,9 @@
----
-# TODO: Define global variables that apply to ALL servers here
-# Example: company_name: "YourCompany"
-# Example: app_port: 80
+company_name: "Aeron Company"
+syslog_server: 192.168.122.1
+app_port: 80
+
+environment_type: "production"
+allowed_admin_ips:
+  - "192.168.122.100"
+  - "192.168.122.101"
+  - "10.0.0.50"

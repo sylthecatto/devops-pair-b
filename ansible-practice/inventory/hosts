@@ -1,3 +1,11 @@
-# TODO 1: Create a group named [webservers] with web-node-1 (IP 192.168.122.74)
-# TODO 2: Create a group named [dbservers] with db-node-1 (IP 192.168.122.13)
-# TODO 3: Create [all:vars] with ansible_user=sysadmin
+[webservers]
+web-node-1 ansible_host=192.168.122.1
+web-node-2 ansible_host=192.168.122.2
+
+[dbservers]
+db-node-1 ansible_host=192.168.122.90
+
+[all:vars]
+ansible_user=root
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+

@@ -1,3 +1,3 @@
----
-# TODO: Define host-specific variables for web-node-1 here
-# Example: app_port: 9090 (Overrides group_vars for this single node!)
+node_banner: "PRIMARY FRONTEND SERVER 01"
+
+app_port: 9090

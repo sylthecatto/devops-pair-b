@@ -1,10 +1,16 @@
 ---
-# TODO: Write your multi-play playbook here!
-# Play 1: Target webservers and call the webserver role
-# Play 2: Target dbservers and call the dbserver role
-
-- name: Practice Playbook
+- name: Configure Web Server Tier
   hosts: webservers
   become: false
+
   roles:
     - webserver
+
+- name: Configure Database Server
+  hosts: dbservers
+  become: false
+
+  vars_files:
+    - group_vars/vault.yml
+  roles:
+    - dbserver

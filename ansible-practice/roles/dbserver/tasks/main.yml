@@ -1,5 +1,12 @@
 ---
-# TODO: Write a debug task here for the database server
-- name: Print dbserver variables
+- name: Display resolved dbserver variables
   ansible.builtin.debug:
-    msg: "MySQL Port is: {{ mysql_port | default('3306') }}"
+    msg:
+      - "Target Hostname: {{ inventory_hostname }}"
+      - "Company Name: {{ company_name }}"
+      - "MySQL Port {{ mysql_port }}"
+      - "DB Name: {{ db_name }}"
+
+- name: Demonstrate the decreyption vault variable
+  ansible.builtin.debug:
+    msg: "Decreted Secret: database password is {{vault_db_password}}"
