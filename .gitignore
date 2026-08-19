@@ -24,3 +24,6 @@ vault_pass
 
 # per-run artifacts
 goss-reports/*.json
+
+# terraform-generated deploy key
+terraform/.ssh/

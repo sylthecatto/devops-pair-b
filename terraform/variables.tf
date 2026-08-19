@@ -1,5 +1,5 @@
 # ────────────
-# variables
+# nodes
 # ────────────
 
 variable "node_count" {
@@ -27,7 +27,7 @@ variable "memory_mb" {
 # storage
 # ────────────
 
-# pair b's own pool, the task forbids using the default pool
+# pair b's own pool, the task forbids the default pool
 variable "pool_name" {
   type    = string
   default = "pool_b"
@@ -38,13 +38,12 @@ variable "pool_path" {
   default = "/var/lib/libvirt/pools/pool_b"
 }
 
-# must match packer's output_directory + vm_name exactly
+# must match packer's output_directory + vm_name
 variable "golden_image_path" {
   type    = string
   default = "/var/lib/devops-pair-b/images/alma10-golden/alma10-golden.qcow2"
 }
 
-# 2 blank data disks per node, ansible formats these ext4 later
 variable "data_disk_count" {
   type    = number
   default = 2
@@ -60,7 +59,7 @@ variable "data_disk_size_gb" {
 # uefi
 # ────────
 
-# same firmware packer built with, confirmed via: rpm -ql edk2-ovmf
+# confirmed via: rpm -ql edk2-ovmf
 variable "ovmf_code" {
   type    = string
   default = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
@@ -71,7 +70,6 @@ variable "ovmf_vars" {
   default = "/usr/share/edk2/ovmf/OVMF_VARS.fd"
 }
 
-# each domain gets its own nvram copy, never a shared file
 variable "nvram_dir" {
   type    = string
   default = "/var/lib/libvirt/qemu/nvram"
@@ -82,21 +80,17 @@ variable "nvram_dir" {
 # access
 # ────────
 
-# the account kickstart.cfg creates, must match everywhere
+# the account kickstart.cfg creates
 variable "ssh_user" {
   type    = string
   default = "syl"
 }
 
-# DEPLOY key, deliberately different from packer's build key
-variable "ssh_public_key_path" {
+# where terraform writes the deploy key it generates. inside the repo
+# dir and gitignored, so no ~/.ssh setup is needed on a fresh machine
+variable "ssh_key_dir" {
   type    = string
-  default = "~/.ssh/pairB_deploy.pub"
-}
-
-variable "ssh_private_key_path" {
-  type    = string
-  default = "~/.ssh/pairB_deploy"
+  default = ".ssh"
 }
 
 variable "network_name" {
