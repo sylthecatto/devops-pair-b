@@ -30,7 +30,7 @@ terraform {
 }
 
 provider "libvirt" {
-  uri = "qemu:///system?socket=/var/run/libvirt/libvirt-sock"
+  uri = "qemu:///system?socket=/var/run/libvirt/virtqemud-sock"
 }
 
 

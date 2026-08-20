@@ -118,4 +118,10 @@ This document contains all mentor Q&A questions, architectural defenses, and pre
 
 ### Q22: What is the difference between `qemu:///system` and `qemu:///system?socket=/var/run/libvirt/libvirt-sock`?
 - **Answer & Justification:**
-  Default `qemu:///system` uses dynamic auto-discovery, attempting to lookup client subshell PIDs in `/proc`. Specifying `uri = "qemu:///system?socket=/var/run/libvirt/libvirt-sock"` points Terraform directly to the UNIX domain socket file on disk, bypassing process ID lookup entirely and ensuring robust execution under Jenkins automation.
+  This fix resolves the process lifecycle difference between terminal execution and automated CI/CD pipelines across 3 key scenarios:
+  1. **Interactive Terminal Execution (`bunny` user)**:
+     When running `terraform apply` manually in a terminal, the shell process ID (PID) remains persistent and open in Linux memory. `libvirtd` looks up the caller's PID in `/proc`, finds user `bunny` active, and authorizes the connection cleanly.
+  2. **Automated Jenkins CI/CD Pipeline (`jenkins` system service user)**:
+     When Jenkins executes `sh 'terraform apply'`, Linux spawns a non-interactive temporary background subshell wrapper. Because this subshell wrapper starts and stops in milliseconds, when `libvirtd` attempts to inspect the caller's PID (`PID 8540`) in `/proc`, the subshell has already closed, causing `libvirtd` to panic with `Cannot find start time for pid 8540`.
+  3. **The Native Modular Socket URI Fix (`?socket=/var/run/libvirt/virtqemud-sock`)**:
+     AlmaLinux 10 uses modern modular hypervisor daemons (`virtqemud-sock`). Pointing Terraform directly to `virtqemud-sock` connects to the native QEMU driver socket, bypassing legacy proxy forwarding and ensuring 100% reliable execution under Jenkins automation.
