@@ -125,3 +125,7 @@ This document contains all mentor Q&A questions, architectural defenses, and pre
      When Jenkins executes `sh 'terraform apply'`, Linux spawns a non-interactive temporary background subshell wrapper. Because this subshell wrapper starts and stops in milliseconds, when `libvirtd` attempts to inspect the caller's PID (`PID 8540`) in `/proc`, the subshell has already closed, causing `libvirtd` to panic with `Cannot find start time for pid 8540`.
   3. **The Native Modular Socket URI Fix (`?socket=/var/run/libvirt/virtqemud-sock`)**:
      AlmaLinux 10 uses modern modular hypervisor daemons (`virtqemud-sock`). Pointing Terraform directly to `virtqemud-sock` connects to the native QEMU driver socket, bypassing legacy proxy forwarding and ensuring 100% reliable execution under Jenkins automation.
+
+### Q24: Why did `pipeline-pair-b` use `libvirt-sock` while `devops-pair-b` requires `virtqemud-sock`?
+- **Answer & Justification:**
+  In `pipeline-pair-b`, Terraform used provider `dmacvicar/libvirt v0.7.6`, which relied on legacy C bindings without strict subshell PID validation. In `devops-pair-b`, we upgraded to `dmacvicar/libvirt v0.8.3`. Version 0.8.3 enforces strict process PID validation against modern Enterprise Linux 10 modular daemons, requiring direct connection to `virtqemud-sock`.
