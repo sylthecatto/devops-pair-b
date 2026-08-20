@@ -103,3 +103,19 @@ This document contains all mentor Q&A questions, architectural defenses, and pre
 ### Q18: Why did Packer fail with "Duplicate variable definition found" in Jenkins?
 - **Answer & Justification:**
   Packer parses all `.pkr.hcl` files present in the build directory. The GitHub remote repository contained two duplicate Packer configuration files (`almalinux.pkr.hcl` and `almalinux10.pkr.hcl`), both defining the same input variables. Deleting the redundant `almalinux.pkr.hcl` file from Git ensures Packer parses a single unified configuration file without variable name collisions.
+
+### Q19: Why execute `./bootstrap.sh` inside Jenkins `Prepare Workspace` stage?
+- **Answer & Justification:**
+  Packer requires the static build SSH key pair `~/.ssh/pairB_build` to authenticate during Kickstart installation. Because Jenkins runs under the dedicated `jenkins` system user account (`/var/lib/jenkins`), running `./bootstrap.sh` in the workspace preparation stage ensures the static build SSH keypair is generated automatically on the Jenkins agent before Packer builds the golden image.
+
+### Q20: What caused `Error: failed to connect: internal error` during libvirt provider init, and how is it resolved?
+- **Answer & Justification:**
+  When QEMU builds the golden image via Packer over an extended duration, libvirt's socket activation state can transition to idle. Re-querying the hypervisor connection (`virsh list --all`) re-initializes the active libvirtd IPC socket channel, allowing the Terraform libvirt provider to query domain process tables cleanly.
+
+### Q21: Why does `libvirt` throw `Cannot find start time for pid` during subshell invocation in Jenkins?
+- **Answer & Justification:**
+  When Jenkins executes `sh 'terraform apply'`, Linux spawns a short-lived transient subshell wrapper PID. If libvirtd's socket activation channel is initializing, the temporary subshell PID terminates before libvirt inspects `/proc/PID/stat`. Re-activating the hypervisor RPC socket channel via `virsh -c qemu:///system list` ensures persistent socket readiness for Terraform execution.
+
+### Q22: What is the difference between `qemu:///system` and `qemu:///system?socket=/var/run/libvirt/libvirt-sock`?
+- **Answer & Justification:**
+  Default `qemu:///system` uses dynamic auto-discovery, attempting to lookup client subshell PIDs in `/proc`. Specifying `uri = "qemu:///system?socket=/var/run/libvirt/libvirt-sock"` points Terraform directly to the UNIX domain socket file on disk, bypassing process ID lookup entirely and ensuring robust execution under Jenkins automation.
