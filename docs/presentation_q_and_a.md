@@ -129,3 +129,7 @@ This document contains all mentor Q&A questions, architectural defenses, and pre
 ### Q24: Why did `pipeline-pair-b` use `libvirt-sock` while `devops-pair-b` requires `virtqemud-sock`?
 - **Answer & Justification:**
   In `pipeline-pair-b`, Terraform used provider `dmacvicar/libvirt v0.7.6`, which relied on legacy C bindings without strict subshell PID validation. In `devops-pair-b`, we upgraded to `dmacvicar/libvirt v0.8.3`. Version 0.8.3 enforces strict process PID validation against modern Enterprise Linux 10 modular daemons, requiring direct connection to `virtqemud-sock`.
+
+### Q25: What is Pluggable Authentication Modules (PAM) and how does `authselect` manage it?
+- **Answer & Justification:**
+  PAM is the central Linux authentication gatekeeper responsible for validating user credentials across SSH, `sudo`, and console logins. `authselect` is Red Hat's utility for managing PAM profiles safely without corrupting configuration files in `/etc/pam.d/`. Setting `rhel10cis_authselect_custom_profile_name: custom_pair_b_profile` in Ansible created a custom CIS-hardened PAM profile enforcing password complexity (`pam_pwquality`) and account lockout protection (`pam_faillock`).
