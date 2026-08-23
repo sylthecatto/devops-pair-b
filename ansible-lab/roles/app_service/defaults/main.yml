@@ -1,0 +1,5 @@
+---
+company_name: "No company"
+app_name: "The ansible lab Practice"
+app_port: 8080
+env_type: "development"

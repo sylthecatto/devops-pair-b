@@ -1,0 +1,38 @@
+---
+# 1. Install Nginx Web Server natively on AlmaLinux 10 VM Host OS
+- name: "WEBSERVER | 1. Install Nginx Web Server"
+  ansible.builtin.package:
+    name:
+      - nginx
+    state: present
+
+# 2. Deploy Dynamic Nginx Reverse Proxy Config Template (.j2)
+- name: "WEBSERVER | 2. Deploy Nginx Reverse Proxy Config"
+  ansible.builtin.template:
+    src: "nginx_proxy.conf.j2"
+    dest: "/etc/nginx/conf.d/aeron_app.conf"
+    mode: "0644"
+  notify:
+    - Reload Nginx Service
+
+# 3. Ensure Nginx service is started & enabled
+- name: "WEBSERVER | 3. Enable and Start Nginx Service"
+  ansible.builtin.systemd:
+    name: "nginx"
+    state: "started"
+    enabled: true
+
+# 4. Open HTTP Port 80 in FirewallD
+- name: "WEBSERVER | 4. Open HTTP Port 80 in FirewallD"
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    state: enabled
+    immediate: true
+
+# 5. Allow Nginx to Proxy to Containers (SELinux Security)
+- name: "WEBSERVER | 5. Allow Nginx to Proxy to Internal Container (SELinux)"
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    persistent: true
+    state: true

@@ -1,0 +1,18 @@
+---
+- name: "Deploy PostgreSQL Database Tier"
+  hosts: dbservers
+  become: true
+  roles:
+    - db_container
+
+- name: Deploy Flask MicroService
+  hosts: appservers
+  become: true
+  roles:
+    - app_container
+
+- name: "deploy NGINX edge resverse proxy"
+  hosts: ingress
+  become: true
+  roles:
+   - webserver

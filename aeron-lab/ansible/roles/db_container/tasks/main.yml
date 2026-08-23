@@ -1,0 +1,38 @@
+---
+# 1. Install Podman on DB Host OS
+- name: "DB_CONTAINER | 1. Install Podman Engine on DB Host OS"
+  ansible.builtin.package:
+    name:
+      - podman
+    state: present
+
+# 2. Open PostgreSQL Port 5432 in FirewallD
+- name: "DB_CONTAINER | 2. Open PostgreSQL Port 5432 in FirewallD"
+  ansible.posix.firewalld:
+    port: "5432/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+# 3. Create persistent storage directory for Postgres data
+- name: "DB_CONTAINER | 3. Create Postgres data volume directory"
+  ansible.builtin.file:
+    path: "/var/lib/postgres/data"
+    state: directory
+    mode: "0777"
+
+# 4. Deploy PostgreSQL 16 Container Box
+- name: "DB_CONTAINER | 4. Deploy PostgreSQL 16 Container Box"
+  containers.podman.podman_container:
+    name: "aeron_postgres_db"
+    image: "docker.io/library/postgres:16-alpine"
+    state: started
+    recreate: true
+    ports:
+      - "5432:5432"
+    env:
+      POSTGRES_DB: "{{ db_name }}"
+      POSTGRES_USER: "{{ db_user }}"
+      POSTGRES_PASSWORD: "{{ db_password }}"
+    volumes:
+      - "/var/lib/postgres/data:/var/lib/postgresql/data:Z"

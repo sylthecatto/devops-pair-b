@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeron Enterprise CRUD Application</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; }
+        .badge-node { background-color: #3b82f6; color: white; font-size: 0.9em; padding: 0.4em 0.8em; border-radius: 6px; }
+        .badge-db { background-color: #10b981; color: white; font-size: 0.9em; padding: 0.4em 0.8em; border-radius: 6px; }
+        .table { color: #f8fafc; }
+        .table-dark { background-color: #1e293b; }
+        .btn-custom { background-color: #6366f1; color: white; border: none; font-weight: 600; }
+        .btn-custom:hover { background-color: #4f46e5; color: white; }
+    </style>
+</head>
+<body class="py-5">
+    <div class="container">
+        <!-- Header Banner -->
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+            <div>
+                <h1 class="h2 font-weight-bold text-white mb-1">🚀 Aeron Enterprise Stack</h1>
+                <p class="text-muted mb-0">Multi-Node Hybrid Cluster & PostgreSQL CRUD Platform</p>
+            </div>
+            <div>
+                <span class="badge-node me-2">Web Node: {{ hostname }}</span>
+                <span class="badge-db">Environment: {{ environment }}</span>
+            </div>
+        </div>
+
+        <!-- Add Item Form -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card p-4 shadow-sm">
+                    <h5 class="card-title text-info mb-3">➕ Add New Inventory Item</h5>
+                    <form action="/add" method="POST" class="row g-3">
+                        <div class="col-md-5">
+                            <input type="text" name="item_name" class="form-control bg-dark text-white border-secondary" placeholder="Item Name (e.g. Nginx Server)" required>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="item_category" class="form-control bg-dark text-white border-secondary" placeholder="Category (e.g. Web Infrastructure)" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-custom w-100 py-2">Add Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card p-4 shadow-sm">
+                    <h5 class="card-title text-warning mb-3">📦 Live Database Inventory Items</h5>
+                    {% if items %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0">
+                            <thead>
+                                <tr class="text-secondary border-bottom border-secondary">
+                                    <th>ID</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td><code>#{{ item[0] }}</code></td>
+                                    <td class="fw-bold text-white">{{ item[1] }}</td>
+                                    <td><span class="badge bg-secondary">{{ item[2] }}</span></td>
+                                    <td class="text-muted"><small>{{ item[3] }}</small></td>
+                                    <td>
+                                        <form action="/delete/{{ item[0] }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger btn-sm px-3">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-secondary text-center my-3">
+                        No inventory items found in PostgreSQL database. Add your first item above!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

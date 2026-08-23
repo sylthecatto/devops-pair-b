@@ -1,0 +1,5 @@
+---
+- name: "Restart App Service Handler"
+  ansible.builtin.debug:
+    msg: "[EVENT HANDLER TRIGGERED] Configuration changed! Relaoding App Service on port {{app_port}}..."
+    

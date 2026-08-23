@@ -1,0 +1,28 @@
+---
+# 1. Install Podman Container Engine on AlmaLinux 10 Host OS
+- name: "APP_CONTAINER | 1. Install Podman Engine on VM OS"
+  ansible.builtin.package:
+    name:
+      - podman
+    state: present
+
+# 2. Deploy your App Container Box on internal Port 8000
+- name: "APP_CONTAINER | 2. Deploy Aeron's App Container Box"
+  containers.podman.podman_container:
+    name: "{{ container_app_name }}"
+    image: "{{ container_image }}"
+    state: started
+    recreate: true
+    ports:
+      - "0.0.0.0:{{ app_internal_port }}:8000"
+    env:
+      ENV_TYPE: "{{ env_type }}"
+      HOSTNAME: "{{ inventory_hostname }}"
+
+- name: "APP CONTAINER | Open App Port in FirewallD"
+  ansible.posix.firewalld:
+    port: "{{app_internal_port}}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+    

@@ -1,0 +1,4 @@
+---
+db_name: "aeron_db"
+db_user: "dbuser"
+db_password: "dbpassword123"

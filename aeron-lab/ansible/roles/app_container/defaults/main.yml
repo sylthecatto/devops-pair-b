@@ -1,0 +1,5 @@
+---
+container_app_name: "aeron_python_app"
+container_image: "docker.io/bunnywkwk/aeron-app:v2.0"
+app_internal_port: 8000
+env_type: "production"

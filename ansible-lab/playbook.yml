@@ -1,0 +1,14 @@
+---
+- name: "Configure Webservers Tier"
+  hosts: webservers
+  become: false
+
+  roles:
+    - app_service
+
+- name: "Configure Database Tier"
+  hosts: dbservers
+  become: false
+
+  roles:
+    - app_service
