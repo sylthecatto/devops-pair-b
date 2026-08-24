@@ -33,7 +33,7 @@ flowchart TD
         ISO["AlmaLinux 10.2 Minimal ISO"] --> QEMU["Packer QEMU Builder"]
         KS["kickstart.cfg\n(LVM + Accounts + Packages)"] --> QEMU
         QEMU --> Clean["Sanitizer Provisioner\n(Wipe Build Key & Machine ID)"]
-        Clean --> GoldenImg["📦 alma10-golden.qcow2 (2.9 GB)\n(packer/output/)"]
+        Clean --> GoldenImg["📦 alma10-golden.qcow2 (2.2 GB)\n(packer/output/)"]
     end
 
     subgraph Layer2 ["2. Terraform: Infrastructure & Identity"]
